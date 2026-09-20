@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transfer Dana – PT Teknologi Aman Sejahtera</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary:#0d3b6e; --accent:#1a73e8; --gold:#c9a84c; --sidebar-w:260px; }
+    * { font-family:'Inter',sans-serif; }
+    body { background:#f1f5f9; }
+
+    .sidebar {
+      position:fixed; top:0; left:0;
+      width:var(--sidebar-w); height:100vh;
+      background:linear-gradient(180deg,#0d3b6e 0%,#0a2342 100%);
+      z-index:1000; overflow-y:auto; display:flex; flex-direction:column;
+    }
+    .sidebar-brand { padding:1.5rem 1.25rem 1rem; border-bottom:1px solid rgba(255,255,255,.1); }
+    .sidebar-brand .brand-icon { width:42px; height:42px; background:rgba(255,255,255,.1); border:1.5px solid var(--gold); border-radius:10px; display:inline-flex; align-items:center; justify-content:center; }
+    .sidebar-brand h6 { color:#fff; font-weight:700; font-size:.85rem; margin-bottom:0; }
+    .sidebar-brand small { color:rgba(255,255,255,.5); font-size:.7rem; }
+    .sidebar-section { padding:.75rem 1.25rem .25rem; }
+    .sidebar-section span { color:rgba(255,255,255,.35); font-size:.68rem; font-weight:600; text-transform:uppercase; letter-spacing:.8px; }
+    .nav-item-side a { display:flex; align-items:center; gap:.75rem; padding:.6rem 1.25rem; color:rgba(255,255,255,.7); text-decoration:none; font-size:.875rem; border-left:3px solid transparent; transition:all .2s; }
+    .nav-item-side a:hover, .nav-item-side a.active { background:rgba(255,255,255,.08); color:#fff; border-left-color:var(--gold); }
+    .nav-item-side a.active { font-weight:600; }
+    .nav-item-side .icon { width:20px; text-align:center; font-size:1rem; }
+    .sidebar-footer { margin-top:auto; padding:1rem 1.25rem; border-top:1px solid rgba(255,255,255,.1); }
+    .user-card { display:flex; align-items:center; gap:.75rem; }
+    .user-avatar { width:36px; height:36px; background:var(--gold); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.85rem; }
+    .user-info small { color:rgba(255,255,255,.5); font-size:.7rem; }
+    .user-info strong { color:#fff; font-size:.8rem; display:block; }
+
+    .main-content { margin-left:var(--sidebar-w); padding:2rem; }
+    .topbar { background:#fff; border-radius:12px; padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; box-shadow:0 1px 4px rgba(0,0,0,.06); margin-bottom:2rem; }
+    .topbar h4 { color:#0d3b6e; font-weight:700; margin:0; font-size:1.15rem; }
+
+    .transfer-card { background:#fff; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+    .transfer-card .tc-header { padding:1.25rem 1.5rem; border-bottom:1px solid #f3f4f6; }
+    .transfer-card .tc-header h6 { margin:0; font-weight:600; color:#374151; }
+    .tc-body { padding:2rem; }
+
+    .form-label { font-size:.875rem; font-weight:600; color:#374151; }
+    .form-control, .form-select {
+      border-radius:8px; border:1.5px solid #d1d5db;
+      padding:.65rem 1rem; font-size:.9rem;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color:var(--accent); box-shadow:0 0 0 3px rgba(26,115,232,.15);
+    }
+    .input-group-text { border-radius:8px 0 0 8px; background:#f3f4f6; border:1.5px solid #d1d5db; }
+    .input-group .form-control { border-radius:0 8px 8px 0; }
+
+    .account-balance-box {
+      background:linear-gradient(135deg,#0d3b6e,#1a5276);
+      border-radius:12px; padding:1.5rem;
+      color:#fff; margin-bottom:1.5rem;
+    }
+    .account-balance-box .label { font-size:.75rem; opacity:.7; text-transform:uppercase; letter-spacing:.5px; }
+    .account-balance-box .amount { font-size:2rem; font-weight:700; margin:.25rem 0; }
+    .account-balance-box .acct-num { font-size:.82rem; opacity:.6; font-family:'Courier New',monospace; }
+
+    .step-indicator { display:flex; gap:0; margin-bottom:2rem; }
+    .step { flex:1; text-align:center; }
+    .step .step-num {
+      width:32px; height:32px;
+      border-radius:50%; display:inline-flex;
+      align-items:center; justify-content:center;
+      font-size:.8rem; font-weight:700;
+      margin:0 auto .5rem;
+    }
+    .step .step-num.done { background:#16a34a; color:#fff; }
+    .step .step-num.active { background:var(--accent); color:#fff; }
+    .step .step-num.pending { background:#e5e7eb; color:#9ca3af; }
+    .step label { font-size:.75rem; color:#6b7280; display:block; }
+    .step-line { flex:1; height:2px; background:#e5e7eb; margin-top:16px; }
+    .step-line.done { background:#16a34a; }
+
+    .btn-transfer {
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      border:none; border-radius:8px; color:#fff;
+      font-weight:600; padding:.75rem 2rem; font-size:.95rem;
+    }
+    .btn-transfer:hover { opacity:.9; color:#fff; }
+
+    .confirmation-box {
+      display:none;
+      background:#f0fdf4; border:1.5px solid #bbf7d0;
+      border-radius:12px; padding:1.5rem; margin-top:1.5rem;
+    }
+    .confirmation-box.show { display:block; }
+    .confirm-row { display:flex; justify-content:space-between; padding:.5rem 0; font-size:.88rem; border-bottom:1px solid #dcfce7; }
+    .confirm-row:last-child { border:none; }
+    .confirm-row .ck { color:#374151; }
+    .confirm-row .cv { font-weight:600; color:#111827; }
+
+    .security-note {
+      background:#fef3c7; border:1px solid #fde68a;
+      border-radius:8px; padding:.85rem 1rem;
+      font-size:.8rem; color:#92400e;
+      display:flex; align-items:flex-start; gap:.75rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-brand d-flex align-items-center gap-2">
+    <div class="brand-icon"><i class="bi bi-shield-lock-fill text-white"></i></div>
+    <div><h6>TAS Finance</h6><small>Portal Keuangan Korporat</small></div>
+  </div>
+  <div class="sidebar-section mt-2"><span>Utama</span></div>
+  <div class="nav-item-side"><a href="/dashboard/keuangan"><span class="icon"><i class="bi bi-speedometer2"></i></span> Dashboard</a></div>
+  <div class="nav-item-side"><a href="/dashboard/laporan"><span class="icon"><i class="bi bi-file-earmark-bar-graph"></i></span> Laporan Keuangan</a></div>
+  <div class="nav-item-side"><a href="/dashboard/transfer_dana" class="active"><span class="icon"><i class="bi bi-arrow-left-right"></i></span> Transfer Dana</a></div>
+  <div class="sidebar-section mt-2"><span>Manajemen</span></div>
+  <div class="nav-item-side"><a href="#"><span class="icon"><i class="bi bi-people-fill"></i></span> Manajemen Pengguna</a></div>
+  <div class="nav-item-side"><a href="#"><span class="icon"><i class="bi bi-gear-fill"></i></span> Pengaturan</a></div>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">BF</div>
+      <div class="user-info"><strong>Budi Finance</strong><small>CFO Division</small></div>
+      <a href="/logout" class="ms-auto text-white opacity-50" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+    </div>
+  </div>
+</nav>
+
+<div class="main-content">
+  <div class="topbar">
+    <div>
+      <h4><i class="bi bi-arrow-left-right me-2" style="color:var(--accent)"></i>Transfer Dana</h4>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0" style="font-size:.8rem;">
+          <li class="breadcrumb-item"><a href="/dashboard/keuangan" class="text-decoration-none">Dashboard</a></li>
+          <li class="breadcrumb-item active">Transfer Dana</li>
+        </ol>
+      </nav>
+    </div>
+    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2">
+      <i class="bi bi-exclamation-triangle me-1"></i>Perlu Verifikasi Dua Faktor
+    </span>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="transfer-card">
+        <div class="tc-header">
+          <h6><i class="bi bi-send-fill me-2" style="color:var(--accent)"></i>Form Transfer Dana Korporat</h6>
+        </div>
+        <div class="tc-body">
+
+          <!-- Step Indicator -->
+          <div class="step-indicator">
+            <div class="step">
+              <div class="step-num active">1</div>
+              <label>Detail Transfer</label>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+              <div class="step-num pending">2</div>
+              <label>Konfirmasi</label>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+              <div class="step-num pending">3</div>
+              <label>Selesai</label>
+            </div>
+          </div>
+
+          <form id="transferForm" onsubmit="showConfirmation(event)">
+            <div class="row g-3 mb-4">
+              <div class="col-12">
+                <label class="form-label">Rekening Sumber</label>
+                <select class="form-select">
+                  <option>Rek. Operasional — •••• 4521 (Saldo: Rp 47.850.000.000)</option>
+                  <option>Rek. Cadangan — •••• 7823 (Saldo: Rp 12.300.000.000)</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Bank Tujuan</label>
+                <select class="form-select" required>
+                  <option value="">-- Pilih Bank --</option>
+                  <option>Bank Central Asia (BCA)</option>
+                  <option>Bank Mandiri</option>
+                  <option>Bank Negara Indonesia (BNI)</option>
+                  <option>Bank Rakyat Indonesia (BRI)</option>
+                  <option>Bank CIMB Niaga</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">No. Rekening Tujuan</label>
+                <input type="text" class="form-control" placeholder="Masukkan nomor rekening" required maxlength="16" />
+              </div>
+              <div class="col-12">
+                <label class="form-label">Nama Penerima</label>
+                <input type="text" class="form-control" placeholder="Nama sesuai rekening tujuan" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Jumlah Transfer (Rp)</label>
+                <div class="input-group">
+                  <span class="input-group-text" style="font-size:.85rem;">Rp</span>
+                  <input type="number" class="form-control" id="transferAmount"
+                         placeholder="0" min="1000000" max="5000000000" required />
+                </div>
+                <div class="form-text">Min: Rp 1.000.000 | Maks: Rp 5.000.000.000</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Tipe Transfer</label>
+                <select class="form-select">
+                  <option>Real-Time (BI-FAST) — Gratis</option>
+                  <option>SKN (H+1) — Rp 2.900</option>
+                  <option>RTGS — Rp 25.000</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Berita / Keterangan</label>
+                <input type="text" class="form-control" placeholder="Misal: Pembayaran Invoice #INV-2024-091" maxlength="140" />
+              </div>
+              <div class="col-12">
+                <div class="security-note">
+                  <i class="bi bi-shield-exclamation fs-5 flex-shrink-0"></i>
+                  <div>
+                    <strong>Verifikasi Keamanan Diperlukan</strong><br/>
+                    Transfer di atas Rp 500.000.000 membutuhkan persetujuan dari
+                    <strong>CFO + Direktur Keuangan</strong> melalui sistem approval internal.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-3">
+              <button type="submit" class="btn btn-transfer">
+                <i class="bi bi-send me-2"></i>Lanjutkan ke Konfirmasi
+              </button>
+              <button type="reset" class="btn btn-outline-secondary">
+                <i class="bi bi-x-circle me-2"></i>Reset Form
+              </button>
+            </div>
+          </form>
+
+          <!-- Confirmation Box (shown by JS) -->
+          <div class="confirmation-box" id="confirmationBox">
+            <h6 class="text-success fw-700 mb-3"><i class="bi bi-check-circle-fill me-2"></i>Konfirmasi Transfer</h6>
+            <div class="confirm-row"><span class="ck">Rekening Sumber</span><span class="cv">•••• 4521</span></div>
+            <div class="confirm-row"><span class="ck">Bank Tujuan</span><span class="cv">Bank Central Asia (BCA)</span></div>
+            <div class="confirm-row"><span class="ck">No. Rekening Tujuan</span><span class="cv" id="confAcct">—</span></div>
+            <div class="confirm-row"><span class="ck">Jumlah</span><span class="cv text-primary" id="confAmount">—</span></div>
+            <div class="confirm-row"><span class="ck">Biaya</span><span class="cv">Gratis (BI-FAST)</span></div>
+            <div class="confirm-row"><span class="ck">Referensi OTP</span><span class="cv" id="confOtp">—</span></div>
+            <div class="mt-3 d-flex gap-2">
+              <button class="btn btn-success px-4" onclick="executeTransfer()">
+                <i class="bi bi-check2-circle me-2"></i>Konfirmasi & Kirim
+              </button>
+              <button class="btn btn-outline-secondary" onclick="document.getElementById('confirmationBox').classList.remove('show')">
+                Batal
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Info -->
+    <div class="col-lg-4">
+      <div class="account-balance-box mb-3">
+        <div class="label">Saldo Rekening Aktif</div>
+        <div class="amount">Rp 47,85 M</div>
+        <div class="acct-num">Rek. Operasional  •••• 4521</div>
+        <hr style="border-color:rgba(255,255,255,.2); margin:.75rem 0" />
+        <div class="d-flex justify-content-between" style="font-size:.8rem; opacity:.8;">
+          <span>Limit Harian: <strong>Rp 10 M</strong></span>
+          <span>Terpakai: <strong>Rp 1,1 M</strong></span>
+        </div>
+        <div class="progress mt-2" style="height:6px; background:rgba(255,255,255,.2);">
+          <div class="progress-bar bg-warning" style="width:11%"></div>
+        </div>
+      </div>
+
+      <div class="transfer-card p-3 mb-3">
+        <h6 class="fw-600" style="font-size:.85rem; color:#374151; margin-bottom:.75rem;">
+          <i class="bi bi-clock-history me-2 text-primary"></i>Transfer Terakhir
+        </h6>
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="font-size:.8rem;">
+          <div>
+            <div class="fw-600">PT Maju Bersama</div>
+            <div class="text-muted">BCA •••• 3391</div>
+          </div>
+          <div class="text-danger fw-600">-Rp 500 Jt</div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="font-size:.8rem;">
+          <div>
+            <div class="fw-600">Hadi Supplier Co.</div>
+            <div class="text-muted">Mandiri •••• 8801</div>
+          </div>
+          <div class="text-danger fw-600">-Rp 125 Jt</div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-2" style="font-size:.8rem;">
+          <div>
+            <div class="fw-600">CV Logistik Nusantara</div>
+            <div class="text-muted">BNI •••• 4472</div>
+          </div>
+          <div class="text-danger fw-600">-Rp 78 Jt</div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" style="font-size:.8rem; border-radius:10px;">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <strong>Jam Operasional Transfer:</strong><br/>
+        BI-FAST: 24/7<br/>
+        SKN/RTGS: Senin–Jum'at 08.00–15.00 WIB
+      </div>
+    </div>
+  </div>
+</div><!-- /main-content -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function showConfirmation(e) {
+    e.preventDefault();
+    const amount = document.getElementById('transferAmount').value;
+    const otp = 'OTP-' + Math.random().toString(36).substr(2,8).toUpperCase();
+    document.getElementById('confAmount').textContent =
+      'Rp ' + parseInt(amount).toLocaleString('id-ID');
+    document.getElementById('confOtp').textContent = otp;
+    document.getElementById('confAcct').textContent = '1234567890 (Dummy)';
+    document.getElementById('confirmationBox').classList.add('show');
+    document.getElementById('confirmationBox').scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  function executeTransfer() {
+    fetch('/api/transfer', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ amount: document.getElementById('transferAmount').value })
+    })
+    .then(r => r.json())
+    .then(data => {
+      alert('✅ ' + data.message + '\nNo. Referensi: ' + data.ref_number);
+      document.getElementById('confirmationBox').classList.remove('show');
+      document.getElementById('transferForm').reset();
+    })
+    .catch(() => alert('Gagal terhubung ke server.'));
+  }
+</script>
+</body>
+</html>
+

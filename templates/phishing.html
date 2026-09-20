@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- =====================================================================
+       [LAB PHISHING] Halaman ini SENGAJA berisi 3 Red Flags edukasi:
+       RF-1: URL logo mengarah ke domain mencurigakan (bukan domain resmi)
+       RF-2: Urgensi mengancam "akun dihapus dalam 24 jam"
+       RF-3: Salah ejaan nama perusahaan di footer ("PT Teknolgi Aman")
+       ===================================================================== -->
+  <title>⚠️ Pembaruan Sistem Darurat – IT Helpdesk</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --danger:#dc2626; --warn:#b45309; }
+    * { font-family:'Inter',sans-serif; }
+
+    body {
+      min-height:100vh;
+      background: #f1f5f9;
+      display:flex; flex-direction:column;
+    }
+
+    /* ---- Fake official top-bar ---- */
+    .fake-topbar {
+      background: #0d3b6e;
+      padding: .5rem 1.5rem;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .fake-topbar span { color:rgba(255,255,255,.7); font-size:.78rem; }
+    .fake-topbar .ticker { color:#fbbf24; font-size:.75rem; }
+
+    /* ---- Alert banner ---- */
+    .urgent-banner {
+      background: linear-gradient(90deg, #7f1d1d, #dc2626, #7f1d1d);
+      background-size: 200% auto;
+      animation: bannerMove 3s linear infinite;
+      padding: .75rem;
+      text-align:center; color:#fff; font-weight:700;
+      font-size:.9rem; letter-spacing:.3px;
+    }
+    @keyframes bannerMove { to { background-position: 200% center; } }
+
+    /* ---- Main card ---- */
+    .phishing-card {
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 20px 60px rgba(0,0,0,.15);
+      max-width:480px; width:100%;
+      overflow:hidden;
+    }
+    .ph-header {
+      background:linear-gradient(135deg, #1e3a5f, #2563eb);
+      padding:2rem; text-align:center;
+      border-bottom:4px solid #dc2626;
+    }
+
+    /* RED FLAG 1: Logo src mengarah ke domain aneh */
+    .ph-logo {
+      width:64px; height:64px;
+      background:rgba(255,255,255,.1);
+      border-radius:12px;
+      display:inline-flex; align-items:center; justify-content:center;
+      margin-bottom:1rem; position:relative;
+    }
+    /* The actual RF1: image tag with suspicious src */
+    .ph-logo img {
+      width:44px; height:44px;
+      /* RED FLAG 1 ↓ URL logo mengarah ke domain tidak dikenal */
+      src: "https://cdn.totally-not-phishing-assets.ru/logo-tas.png";
+    }
+
+    .ph-header h5 { color:#fff; font-weight:700; font-size:1.05rem; margin-bottom:.25rem; }
+    .ph-header small { color:rgba(255,255,255,.65); font-size:.78rem; }
+
+    .ph-body { padding:2rem; }
+
+    /* RED FLAG 2: Urgency warning box */
+    .urgency-box {
+      background:#fef2f2; border:1.5px solid #fca5a5;
+      border-radius:10px; padding:1rem;
+      margin-bottom:1.5rem; text-align:center;
+    }
+    .urgency-box .ub-title { color:#dc2626; font-weight:700; font-size:.95rem; margin-bottom:.35rem; }
+    /* RED FLAG 2 ↓ Urgensi mengancam */
+    .urgency-box .ub-msg { color:#b91c1c; font-size:.85rem; }
+    .countdown { font-size:1.4rem; font-weight:700; color:#dc2626; font-family:'Courier New',monospace; }
+
+    .form-label { font-size:.875rem; font-weight:600; color:#374151; }
+    .form-control {
+      border-radius:8px; border:1.5px solid #d1d5db;
+      padding:.65rem 1rem; font-size:.9rem;
+    }
+    .form-control:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.15); }
+    .input-group-text { border-radius:8px 0 0 8px; background:#f3f4f6; border:1.5px solid #d1d5db; }
+    .input-group .form-control { border-radius:0 8px 8px 0; }
+
+    .btn-ph-submit {
+      background:linear-gradient(135deg,#dc2626,#b91c1c);
+      border:none; border-radius:8px; color:#fff;
+      font-weight:700; padding:.8rem; width:100%;
+      font-size:.95rem; letter-spacing:.3px;
+    }
+    .btn-ph-submit:hover { opacity:.9; color:#fff; }
+
+    .ph-footer {
+      background:#f9fafb; border-top:1px solid #f3f4f6;
+      padding:.85rem 2rem; text-align:center;
+      font-size:.72rem; color:#9ca3af;
+    }
+    /* RED FLAG 3 ↓ Salah ejaan nama perusahaan */
+    .ph-footer .company-name { color:#6b7280; font-weight:500; }
+  </style>
+</head>
+<body>
+
+<!-- Fake official top bar -->
+<div class="fake-topbar">
+  <span><i class="bi bi-shield-check me-1"></i>Portal Internal TAS Corporation</span>
+  <span class="ticker"><i class="bi bi-broadcast me-1"></i>SIAGA KEAMANAN LEVEL 2 AKTIF</span>
+</div>
+
+<!-- URGENT BANNER — RED FLAG 2 -->
+<div class="urgent-banner">
+  ⚠️ &nbsp; PERINGATAN DARURAT: Akun Anda akan dihapus permanen dalam 24 jam jika tidak diverifikasi segera! &nbsp; ⚠️
+</div>
+
+<!-- Main Content -->
+<div class="flex-grow-1 d-flex align-items-center justify-content-center py-4 px-3">
+  <div class="phishing-card">
+
+    <!-- Header -->
+    <div class="ph-header">
+      <!-- RED FLAG 1: Logo dari domain tidak dikenal -->
+      <div class="ph-logo">
+        <img
+          src="https://cdn.totally-not-phishing-assets.ru/logo-tas.png"
+          alt="Logo"
+          onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'bi bi-shield-lock-fill text-white fs-2\'></i>';"
+        />
+      </div>
+      <h5>Verifikasi Akun Darurat</h5>
+      <small>Tim IT Departemen – PT Teknologi Aman Sejahtera</small>
+    </div>
+
+    <!-- Body -->
+    <div class="ph-body">
+
+      <!-- RED FLAG 2: Countdown urgency -->
+      <div class="urgency-box">
+        <div class="ub-title"><i class="bi bi-exclamation-triangle-fill me-2"></i>TINDAKAN SEGERA DIPERLUKAN</div>
+        <div class="ub-msg">
+          Akun korporat Anda terdeteksi aktivitas mencurigakan.<br/>
+          <strong>Akun akan DIHAPUS PERMANEN</strong> jika tidak diverifikasi dalam:
+        </div>
+        <div class="countdown mt-2" id="countdown">23:59:47</div>
+        <div style="font-size:.72rem; color:#ef4444; margin-top:.35rem;">Harap segera lakukan verifikasi!</div>
+      </div>
+
+      <!-- Phishing Form -->
+      <form action="/api/phishing-submit" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Username / NIK Karyawan</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+            <input type="text" class="form-control" name="username"
+                   placeholder="Masukkan username Anda" required />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password Saat Ini</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+            <input type="password" class="form-control" name="password"
+                   placeholder="Masukkan password Anda" required />
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Password Baru (Pembaruan Wajib)</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock-fill text-danger"></i></span>
+            <input type="password" class="form-control border-danger" name="new_password"
+                   placeholder="Buat password baru" required />
+          </div>
+          <div class="form-text text-danger">
+            <i class="bi bi-info-circle me-1"></i>Password baru harus minimal 8 karakter
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-ph-submit">
+          <i class="bi bi-shield-check me-2"></i>VERIFIKASI AKUN SEKARANG
+        </button>
+
+        <div class="mt-3 text-center">
+          <button type="button" class="btn btn-sm btn-outline-danger w-100 py-2" onclick="reportPhishing()" style="font-size: .82rem;">
+            <i class="bi bi-flag-fill me-1"></i>Laporkan Halaman Ini Sebagai Phishing Mencurigakan
+          </button>
+        </div>
+      </form>
+
+      <div class="text-center mt-3" style="font-size:.78rem; color:#9ca3af;">
+        Butuh bantuan? Hubungi IT Helpdesk: <strong>it-helpdesk@tas-corp.internal</strong>
+      </div>
+    </div>
+
+    <!-- Footer — RED FLAG 3: Salah ejaan -->
+    <div class="ph-footer">
+      <!-- RED FLAG 3 ↓ "PT Teknolgi" — huruf 'o' hilang dari "Teknologi" -->
+      <span class="company-name">&copy; 2024 PT Teknolgi Aman Sejahtera</span>
+      &nbsp;|&nbsp; Sistem Keamanan Internal &nbsp;|&nbsp;
+      <a href="#" class="text-decoration-none" style="color:#9ca3af;">Kebijakan Privasi</a>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Fake countdown timer (RED FLAG 2 enhancement)
+  let totalSeconds = 23 * 3600 + 59 * 60 + 47;
+  const cdEl = document.getElementById('countdown');
+  setInterval(() => {
+    if (totalSeconds <= 0) { cdEl.textContent = '00:00:00'; return; }
+    totalSeconds--;
+    const h = Math.floor(totalSeconds / 3600).toString().padStart(2,'0');
+    const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2,'0');
+    const s = (totalSeconds % 60).toString().padStart(2,'0');
+    cdEl.textContent = `${h}:${m}:${s}`;
+  }, 1000);
+
+  function reportPhishing() {
+    fetch('/api/phishing-report', { method: 'POST' })
+      .then(r => r.json())
+      .then(d => {
+        alert(d.message);
+        window.location.href = '/security/campaign-dashboard';
+      })
+      .catch(() => alert('Laporan telah dikirim ke Tim Security TAS Corporation.'));
+  }
+</script>
+</body>
+</html>
+

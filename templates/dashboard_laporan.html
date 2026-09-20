@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laporan Keuangan – PT Teknologi Aman Sejahtera</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <style>
+    :root { --primary:#0d3b6e; --accent:#1a73e8; --gold:#c9a84c; --sidebar-w:260px; }
+    * { font-family:'Inter',sans-serif; }
+    body { background:#f1f5f9; }
+
+    .sidebar {
+      position:fixed; top:0; left:0;
+      width:var(--sidebar-w); height:100vh;
+      background:linear-gradient(180deg,#0d3b6e 0%,#0a2342 100%);
+      z-index:1000; overflow-y:auto; display:flex; flex-direction:column;
+    }
+    .sidebar-brand { padding:1.5rem 1.25rem 1rem; border-bottom:1px solid rgba(255,255,255,.1); }
+    .sidebar-brand .brand-icon { width:42px; height:42px; background:rgba(255,255,255,.1); border:1.5px solid var(--gold); border-radius:10px; display:inline-flex; align-items:center; justify-content:center; }
+    .sidebar-brand h6 { color:#fff; font-weight:700; font-size:.85rem; margin-bottom:0; }
+    .sidebar-brand small { color:rgba(255,255,255,.5); font-size:.7rem; }
+    .sidebar-section { padding:.75rem 1.25rem .25rem; }
+    .sidebar-section span { color:rgba(255,255,255,.35); font-size:.68rem; font-weight:600; text-transform:uppercase; letter-spacing:.8px; }
+    .nav-item-side a { display:flex; align-items:center; gap:.75rem; padding:.6rem 1.25rem; color:rgba(255,255,255,.7); text-decoration:none; font-size:.875rem; border-left:3px solid transparent; transition:all .2s; }
+    .nav-item-side a:hover, .nav-item-side a.active { background:rgba(255,255,255,.08); color:#fff; border-left-color:var(--gold); }
+    .nav-item-side a.active { font-weight:600; }
+    .nav-item-side .icon { width:20px; text-align:center; font-size:1rem; }
+    .sidebar-footer { margin-top:auto; padding:1rem 1.25rem; border-top:1px solid rgba(255,255,255,.1); }
+    .user-card { display:flex; align-items:center; gap:.75rem; }
+    .user-avatar { width:36px; height:36px; background:var(--gold); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.85rem; }
+    .user-info small { color:rgba(255,255,255,.5); font-size:.7rem; }
+    .user-info strong { color:#fff; font-size:.8rem; display:block; }
+
+    .main-content { margin-left:var(--sidebar-w); padding:2rem; }
+    .topbar { background:#fff; border-radius:12px; padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; box-shadow:0 1px 4px rgba(0,0,0,.06); margin-bottom:2rem; }
+    .topbar h4 { color:#0d3b6e; font-weight:700; margin:0; font-size:1.15rem; }
+
+    .report-card { background:#fff; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+    .report-card .rc-header { padding:1.25rem 1.5rem; border-bottom:1px solid #f3f4f6; display:flex; justify-content:space-between; align-items:center; }
+    .report-card .rc-header h6 { margin:0; font-weight:600; color:#374151; }
+    .rc-body { padding:1.5rem; }
+
+    .summary-row { display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+    .summary-item { flex:1; min-width:160px; background:#f9fafb; border-radius:10px; padding:1rem; border-left:4px solid; }
+    .summary-item.blue { border-color:#1a73e8; }
+    .summary-item.green { border-color:#16a34a; }
+    .summary-item.red { border-color:#dc2626; }
+    .summary-item label { font-size:.72rem; color:#6b7280; text-transform:uppercase; font-weight:600; letter-spacing:.4px; }
+    .summary-item .val { font-size:1.25rem; font-weight:700; color:#111827; }
+
+    .table thead th { background:#f9fafb; color:#6b7280; font-size:.78rem; font-weight:600; text-transform:uppercase; letter-spacing:.5px; border:none; padding:.75rem 1rem; }
+    .table tbody td { font-size:.84rem; color:#374151; padding:.8rem 1rem; vertical-align:middle; border-color:#f3f4f6; }
+    .badge-s { border-radius:6px; padding:3px 10px; font-size:.72rem; font-weight:600; }
+  </style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-brand d-flex align-items-center gap-2">
+    <div class="brand-icon"><i class="bi bi-shield-lock-fill text-white"></i></div>
+    <div><h6>TAS Finance</h6><small>Portal Keuangan Korporat</small></div>
+  </div>
+  <div class="sidebar-section mt-2"><span>Utama</span></div>
+  <div class="nav-item-side"><a href="/dashboard/keuangan"><span class="icon"><i class="bi bi-speedometer2"></i></span> Dashboard</a></div>
+  <div class="nav-item-side"><a href="/dashboard/laporan" class="active"><span class="icon"><i class="bi bi-file-earmark-bar-graph"></i></span> Laporan Keuangan</a></div>
+  <div class="nav-item-side"><a href="/dashboard/transfer_dana"><span class="icon"><i class="bi bi-arrow-left-right"></i></span> Transfer Dana</a></div>
+  <div class="sidebar-section mt-2"><span>Manajemen</span></div>
+  <div class="nav-item-side"><a href="#"><span class="icon"><i class="bi bi-people-fill"></i></span> Manajemen Pengguna</a></div>
+  <div class="nav-item-side"><a href="#"><span class="icon"><i class="bi bi-gear-fill"></i></span> Pengaturan</a></div>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">BF</div>
+      <div class="user-info"><strong>Budi Finance</strong><small>CFO Division</small></div>
+      <a href="/logout" class="ms-auto text-white opacity-50" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+    </div>
+  </div>
+</nav>
+
+<div class="main-content">
+  <div class="topbar">
+    <div>
+      <h4><i class="bi bi-file-earmark-bar-graph me-2" style="color:var(--accent)"></i>Laporan Keuangan</h4>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0" style="font-size:.8rem;">
+          <li class="breadcrumb-item"><a href="/dashboard/keuangan" class="text-decoration-none">Dashboard</a></li>
+          <li class="breadcrumb-item active">Laporan</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="d-flex gap-2">
+      <select class="form-select form-select-sm" style="width:140px;">
+        <option>September 2024</option>
+        <option>Agustus 2024</option>
+        <option>Juli 2024</option>
+      </select>
+      <button class="btn btn-sm btn-outline-primary"><i class="bi bi-download me-1"></i>Ekspor PDF</button>
+    </div>
+  </div>
+
+  <!-- Summary Metrics -->
+  <div class="summary-row mb-4">
+    <div class="summary-item blue">
+      <label>Total Pemasukan</label>
+      <div class="val">Rp 8,3 M</div>
+    </div>
+    <div class="summary-item red">
+      <label>Total Pengeluaran</label>
+      <div class="val">Rp 3,1 M</div>
+    </div>
+    <div class="summary-item green">
+      <label>Laba Bersih</label>
+      <div class="val">Rp 5,2 M</div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <!-- Trend Chart -->
+    <div class="col-lg-8">
+      <div class="report-card">
+        <div class="rc-header">
+          <h6><i class="bi bi-graph-up me-2" style="color:var(--accent)"></i>Tren Keuangan Tahunan (2024)</h6>
+        </div>
+        <div class="rc-body">
+          <canvas id="trendChart" height="80"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Categories -->
+    <div class="col-lg-4">
+      <div class="report-card h-100">
+        <div class="rc-header"><h6><i class="bi bi-tags me-2"></i>Kategori Pengeluaran Terbesar</h6></div>
+        <div class="rc-body p-0">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3" style="font-size:.85rem;">
+              <span><i class="bi bi-people me-2 text-primary"></i>SDM & Payroll</span>
+              <strong>Rp 850 Jt</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3" style="font-size:.85rem;">
+              <span><i class="bi bi-box-seam me-2 text-warning"></i>Operasional</span>
+              <strong>Rp 620 Jt</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3" style="font-size:.85rem;">
+              <span><i class="bi bi-cpu me-2 text-info"></i>Infrastruktur IT</span>
+              <strong>Rp 450 Jt</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3" style="font-size:.85rem;">
+              <span><i class="bi bi-megaphone me-2 text-danger"></i>Marketing</span>
+              <strong>Rp 310 Jt</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3" style="font-size:.85rem;">
+              <span><i class="bi bi-lightbulb me-2 text-success"></i>Riset & Inovasi</span>
+              <strong>Rp 220 Jt</strong>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Transaction Report -->
+  <div class="report-card">
+    <div class="rc-header">
+      <h6><i class="bi bi-table me-2"></i>Detail Transaksi – September 2024</h6>
+      <form method="GET" action="/dashboard/laporan" class="d-flex gap-2">
+        <div class="input-group input-group-sm" style="width:260px;">
+          <input type="text" name="q" value="{{ query|default('') }}" class="form-control" placeholder="Cari transaksi..." />
+          <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Cari</button>
+        </div>
+        {% if query %}
+        <a href="/dashboard/laporan" class="btn btn-sm btn-outline-secondary">Reset</a>
+        {% endif %}
+      </form>
+    </div>
+    {% if query %}
+    <div class="px-4 py-2 bg-light border-bottom d-flex justify-content-between align-items-center" style="font-size: .85rem;">
+      <div>
+        <i class="bi bi-info-circle me-1 text-primary"></i>
+        Hasil pencarian untuk kata kunci: <strong>{{ query | safe }}</strong> (Ditemukan {{ transactions|length }} transaksi)
+      </div>
+      <a href="/dashboard/laporan" class="btn btn-sm btn-link text-decoration-none py-0" style="font-size:.8rem;">Hapus Filter</a>
+    </div>
+    {% endif %}
+    <div class="table-responsive">
+      <table class="table mb-0">
+        <thead>
+          <tr><th>No. Ref</th><th>Tanggal</th><th>Keterangan</th><th>Rekening</th><th>Debet</th><th>Kredit</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          {% for tx in transactions %}
+          <tr>
+            <td><code style="font-size:.75rem;">{{ tx.ref_number }}</code></td>
+            <td>{{ tx.tx_date }}</td>
+            <td>{{ tx.description }}</td>
+            <td>{{ tx.account }}</td>
+            <td class="text-danger">{{ tx.debit }}</td>
+            <td class="text-success">{{ tx.credit }}</td>
+            <td>
+              {% if tx.status == 'Sukses' %}
+              <span class="badge-s bg-success-subtle text-success">Sukses</span>
+              {% elif tx.status == 'Pending' %}
+              <span class="badge-s bg-warning-subtle text-warning">Pending</span>
+              {% else %}
+              <span class="badge-s bg-danger-subtle text-danger">Gagal</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" class="text-center py-4 text-muted">
+              <i class="bi bi-search me-1"></i> Tidak ditemukan transaksi yang sesuai dengan kriteria.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="d-flex justify-content-between align-items-center px-3 py-3" style="font-size:.82rem; color:#6b7280; border-top:1px solid #f3f4f6;">
+      <span>Menampilkan {{ transactions|length }} transaksi</span>
+      <div class="d-flex gap-1">
+        <button class="btn btn-sm btn-outline-secondary px-2 py-1">‹</button>
+        <button class="btn btn-sm btn-primary px-2 py-1">1</button>
+        <button class="btn btn-sm btn-outline-secondary px-2 py-1">›</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep'],
+      datasets: [
+        {
+          label: 'Pemasukan (Juta)',
+          data: [5200,5800,6100,6200,7100,6800,7500,8100,8300],
+          borderColor:'#1a73e8', backgroundColor:'rgba(26,115,232,.1)',
+          fill:true, tension:.4, pointRadius:4, pointBackgroundColor:'#1a73e8'
+        },
+        {
+          label: 'Pengeluaran (Juta)',
+          data: [2500,2700,2600,2800,3100,2900,3300,2950,3100],
+          borderColor:'#dc2626', backgroundColor:'rgba(220,38,38,.08)',
+          fill:true, tension:.4, pointRadius:4, pointBackgroundColor:'#dc2626'
+        },
+        {
+          label: 'Laba Bersih (Juta)',
+          data: [2700,3100,3500,3400,4000,3900,4200,5150,5200],
+          borderColor:'#16a34a', backgroundColor:'rgba(22,163,74,.08)',
+          fill:true, tension:.4, pointRadius:4, pointBackgroundColor:'#16a34a'
+        }
+      ]
+    },
+    options: {
+      responsive:true,
+      plugins:{ legend:{ labels:{ font:{family:'Inter',size:12} } } },
+      scales:{
+        x:{grid:{display:false}},
+        y:{grid:{color:'#f3f4f6'}, ticks:{callback:v=>'Rp '+v/1000+'M'}}
+      }
+    }
+  });
+</script>
+</body>
+</html>
+

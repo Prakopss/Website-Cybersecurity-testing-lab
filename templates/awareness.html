@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security Awareness – PT Teknologi Aman Sejahtera</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary:#0d3b6e; --accent:#1a73e8; --success:#16a34a; }
+    * { font-family:'Inter',sans-serif; }
+
+    body {
+      min-height:100vh;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%);
+      display:flex; flex-direction:column;
+    }
+
+    /* Top bar */
+    .security-topbar {
+      background: var(--primary);
+      padding:.6rem 2rem;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .security-topbar span { color:rgba(255,255,255,.7); font-size:.78rem; }
+    .security-topbar .safe-badge {
+      background:#16a34a; color:#fff;
+      border-radius:20px; padding:3px 12px;
+      font-size:.72rem; font-weight:600;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background:#fff;
+      border-bottom:1px solid #e2e8f0;
+      padding:3rem 2rem;
+      text-align:center;
+    }
+    .hero-icon-wrap {
+      width:90px; height:90px;
+      background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+      border-radius:50%;
+      display:inline-flex; align-items:center; justify-content:center;
+      margin-bottom:1.5rem;
+      box-shadow: 0 0 0 12px rgba(22,163,74,.08);
+    }
+    .hero-section h1 { color:#111827; font-weight:800; font-size:1.85rem; margin-bottom:.75rem; }
+    .hero-section .sub {
+      font-size:1.05rem; color:#374151; max-width:580px;
+      margin:0 auto 1.5rem;
+    }
+    .safe-message {
+      display:inline-flex; align-items:center; gap:.75rem;
+      background:#f0fdf4; border:1.5px solid #bbf7d0;
+      border-radius:12px; padding:.85rem 1.5rem;
+      font-size:.9rem; color:#166534;
+      max-width:600px; text-align:left;
+    }
+
+    /* Main content */
+    .main-wrap { max-width:900px; margin:0 auto; padding:2.5rem 1.5rem; width:100%; }
+
+    /* Red Flag Cards */
+    .rf-section-title {
+      font-size:1.1rem; font-weight:700; color:#374151;
+      margin-bottom:1.5rem;
+      display:flex; align-items:center; gap:.6rem;
+    }
+    .rf-card {
+      background:#fff;
+      border-radius:14px;
+      box-shadow:0 2px 8px rgba(0,0,0,.07);
+      overflow:hidden;
+      margin-bottom:1.25rem;
+      border-left:5px solid;
+      transition:transform .2s, box-shadow .2s;
+    }
+    .rf-card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.1); }
+    .rf-card.rf1 { border-left-color:#7c3aed; }
+    .rf-card.rf2 { border-left-color:#dc2626; }
+    .rf-card.rf3 { border-left-color:#d97706; }
+
+    .rf-header {
+      display:flex; align-items:flex-start; gap:1rem;
+      padding:1.25rem 1.5rem;
+    }
+    .rf-badge {
+      width:40px; height:40px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.1rem; flex-shrink:0;
+    }
+    .rf1 .rf-badge { background:#f3e8ff; }
+    .rf2 .rf-badge { background:#fef2f2; }
+    .rf3 .rf-badge { background:#fff7ed; }
+
+    .rf-content .rf-title { font-weight:700; color:#111827; font-size:.95rem; margin-bottom:.35rem; }
+    .rf-content .rf-desc { font-size:.87rem; color:#4b5563; line-height:1.65; }
+
+    .rf-evidence {
+      background:#f9fafb; border-top:1px solid #f3f4f6;
+      padding:1rem 1.5rem; font-size:.82rem;
+    }
+    .rf-evidence .ev-label { font-weight:600; color:#6b7280; margin-bottom:.35rem; font-size:.75rem; text-transform:uppercase; letter-spacing:.4px; }
+    .rf-evidence .ev-bad { color:#dc2626; background:#fef2f2; border-radius:6px; padding:4px 10px; font-family:'Courier New',monospace; display:inline-block; margin:.2rem 0; }
+    .rf-evidence .ev-good { color:#16a34a; background:#f0fdf4; border-radius:6px; padding:4px 10px; font-family:'Courier New',monospace; display:inline-block; margin:.2rem 0; }
+
+    /* Tips Section */
+    .tips-card {
+      background:linear-gradient(135deg,#0d3b6e,#1a5276);
+      border-radius:14px; padding:2rem;
+      color:#fff; margin-bottom:1.5rem;
+    }
+    .tips-card h5 { font-weight:700; margin-bottom:1.5rem; font-size:1.05rem; }
+    .tip-item { display:flex; gap:.85rem; margin-bottom:1.1rem; align-items:flex-start; }
+    .tip-icon { width:36px; height:36px; background:rgba(255,255,255,.12); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .tip-text strong { display:block; font-size:.88rem; font-weight:600; }
+    .tip-text span { font-size:.8rem; opacity:.75; }
+
+    /* Score / Quiz teaser */
+    .score-card {
+      background:#fff; border-radius:14px;
+      box-shadow:0 2px 8px rgba(0,0,0,.07);
+      padding:2rem; text-align:center;
+      margin-bottom:1.5rem;
+    }
+    .score-ring {
+      width:100px; height:100px;
+      border-radius:50%;
+      background:conic-gradient(#dc2626 0% 30%, #e5e7eb 30% 100%);
+      display:inline-flex; align-items:center; justify-content:center;
+      position:relative; margin-bottom:1rem;
+    }
+    .score-ring-inner {
+      width:76px; height:76px;
+      background:#fff; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.1rem; font-weight:800; color:#dc2626;
+    }
+
+    /* CTA Buttons */
+    .cta-wrap { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem; }
+    .btn-safe { background:linear-gradient(135deg,var(--primary),var(--accent)); border:none; border-radius:10px; color:#fff; font-weight:600; padding:.8rem 1.75rem; font-size:.95rem; }
+    .btn-safe:hover { opacity:.9; color:#fff; }
+    .btn-outline-safe { border:1.5px solid var(--primary); border-radius:10px; color:var(--primary); font-weight:600; padding:.8rem 1.75rem; font-size:.95rem; background:#fff; }
+    .btn-outline-safe:hover { background:var(--primary); color:#fff; }
+
+    /* Footer */
+    .awareness-footer {
+      background:var(--primary); color:rgba(255,255,255,.6);
+      padding:1.25rem 2rem; text-align:center;
+      font-size:.78rem; margin-top:auto;
+    }
+    .awareness-footer strong { color:#fff; }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="security-topbar">
+  <span><i class="bi bi-shield-lock-fill me-2"></i>PT Teknologi Aman Sejahtera – Security Awareness Program</span>
+  <span class="safe-badge"><i class="bi bi-check-circle me-1"></i>Data Anda Aman</span>
+</div>
+
+<!-- Hero -->
+<div class="hero-section">
+  <div class="hero-icon-wrap">
+    <i class="bi bi-shield-check-fill text-success" style="font-size:2.5rem;"></i>
+  </div>
+  <h1>Oops! Anda Baru Saja Masuk<br/>Simulasi <span style="color:#dc2626;">Phishing</span> 🎯</h1>
+  <p class="sub">
+    Jangan khawatir — <strong>tidak ada data Anda yang tersimpan atau bocor.</strong>
+    Ini adalah simulasi resmi dari <strong>Tim Security PT Teknologi Aman Sejahtera</strong>
+    untuk meningkatkan kesadaran keamanan siber karyawan.
+  </p>
+  <div class="safe-message">
+    <i class="bi bi-check-circle-fill text-success fs-4 flex-shrink-0"></i>
+    <div>
+      <strong>Data Anda 100% Aman.</strong><br/>
+      Password yang Anda masukkan <strong>tidak pernah disimpan, dikirim, atau direkam</strong>
+      ke server manapun. Sistem langsung mengalihkan Anda ke halaman ini.
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-wrap">
+
+  <!-- Red Flags Section -->
+  <div class="rf-section-title">
+    <i class="bi bi-flag-fill text-danger"></i>
+    3 Red Flags yang Ada di Halaman Sebelumnya
+  </div>
+  <p class="text-muted mb-3" style="font-size:.88rem;">
+    Berikut adalah tanda-tanda peringatan yang seharusnya membuat Anda curiga bahwa halaman tersebut adalah phishing:
+  </p>
+
+  <!-- Red Flag 1 -->
+  <div class="rf-card rf1">
+    <div class="rf-header">
+      <div class="rf-badge rf1"><i class="bi bi-link-45deg text-purple" style="color:#7c3aed;"></i></div>
+      <div class="rf-content">
+        <div class="rf-title">🚩 Red Flag #1 — URL Logo dari Domain Mencurigakan</div>
+        <div class="rf-desc">
+          Logo perusahaan di halaman tersebut <strong>tidak diambil dari server resmi perusahaan</strong>,
+          melainkan dari domain asing yang sama sekali tidak ada hubungannya dengan PT Teknologi Aman Sejahtera.
+          Ini teknik umum phisher untuk menghemat bandwidth dan menghindari deteksi — logo terlihat sama,
+          tapi sumbernya berbeda.
+        </div>
+      </div>
+    </div>
+    <div class="rf-evidence">
+      <div class="ev-label">Bukti di kode halaman:</div>
+      <div class="ev-bad">❌ src="https://cdn.totally-not-phishing-assets.ru/logo-tas.png"</div><br/>
+      <div class="ev-good">✅ Seharusnya: src="https://tas-corp.id/assets/images/logo-official.png"</div>
+      <div class="mt-2" style="color:#6b7280; font-size:.8rem;">
+        <strong>Cara Deteksi:</strong> Klik kanan pada logo → "Inspect" atau "Inspect Element" →
+        perhatikan atribut <code>src</code> gambar. Jika domain-nya asing, halaman tersebut <strong>bukan</strong> halaman resmi.
+      </div>
+    </div>
+  </div>
+
+  <!-- Red Flag 2 -->
+  <div class="rf-card rf2">
+    <div class="rf-header">
+      <div class="rf-badge rf2"><i class="bi bi-alarm-fill text-danger"></i></div>
+      <div class="rf-content">
+        <div class="rf-title">🚩 Red Flag #2 — Urgensi Mengancam & Countdown Timer</div>
+        <div class="rf-desc">
+          Halaman tersebut menggunakan kalimat seperti <em>"Akun akan DIHAPUS PERMANEN dalam 24 jam"</em>
+          dan timer hitung mundur yang berkedip. Ini adalah teknik <strong>Social Engineering</strong> klasik
+          bernama <em>Scarcity & Urgency Attack</em>. Tujuannya membuat Anda panik dan bertindak <em>tanpa berpikir</em>,
+          sehingga melewatkan tanda-tanda kecurigaan.
+        </div>
+      </div>
+    </div>
+    <div class="rf-evidence">
+      <div class="ev-label">Kalimat manipulatif yang digunakan:</div>
+      <div class="ev-bad">❌ "Akun Anda akan DIHAPUS PERMANEN dalam 24 jam jika tidak diverifikasi!"</div>
+      <div class="mt-2" style="color:#6b7280; font-size:.8rem;">
+        <strong>Aturan Emas:</strong> Tim IT <strong>TIDAK PERNAH</strong> meminta verifikasi password melalui
+        halaman web dengan ancaman penghapusan akun mendadak. Jika ragu, <strong>telepon langsung</strong>
+        helpdesk di nomor resmi yang Anda tahu (bukan nomor dari email/pesan mencurigakan).
+      </div>
+    </div>
+  </div>
+
+  <!-- Red Flag 3 -->
+  <div class="rf-card rf3">
+    <div class="rf-header">
+      <div class="rf-badge rf3"><i class="bi bi-spell-check text-warning" style="color:#d97706;"></i></div>
+      <div class="rf-content">
+        <div class="rf-title">🚩 Red Flag #3 — Salah Ejaan Nama Perusahaan di Footer</div>
+        <div class="rf-desc">
+          Di bagian bawah (footer) halaman phishing, nama perusahaan ditulis <strong>"PT Teknolgi Aman Sejahtera"</strong>
+          — huruf <strong>'o'</strong> hilang dari kata "Teknologi". Phisher sering membuat kesalahan ejaan kecil
+          karena menyalin konten secara tergesa-gesa. Ini adalah teknik yang disebut <em>Typosquatting</em>
+          yang sering juga diterapkan pada nama domain.
+        </div>
+      </div>
+    </div>
+    <div class="rf-evidence">
+      <div class="ev-label">Perbandingan:</div>
+      <div class="ev-bad">❌ "PT Teknolgi Aman Sejahtera" (hilang huruf 'o')</div><br/>
+      <div class="ev-good">✅ Nama benar: "PT Teknologi Aman Sejahtera"</div>
+      <div class="mt-2" style="color:#6b7280; font-size:.8rem;">
+        <strong>Kebiasaan Baik:</strong> Selalu baca footer halaman dengan teliti. Perhatikan nama perusahaan,
+        tahun copyright, dan tautan kebijakan privasi. Jika ada yang terasa janggal, jangan isi form apapun.
+      </div>
+    </div>
+  </div>
+
+  <!-- Score Card -->
+  <div class="score-card mb-4">
+    <div class="score-ring">
+      <div class="score-ring-inner">1/3</div>
+    </div>
+    <h6 class="fw-700 text-danger mb-1">Anda Terdeteksi Phishing</h6>
+    <p class="text-muted mb-3" style="font-size:.85rem;">
+      Jangan berkecil hati! Simulasi ini dirancang sangat realistis. Yang terpenting adalah belajar dari pengalaman ini.
+    </p>
+    <div class="progress" style="height:10px; border-radius:8px; max-width:300px; margin:0 auto;">
+      <div class="progress-bar bg-danger" style="width:33%"></div>
+    </div>
+    <div style="font-size:.75rem; color:#9ca3af; margin-top:.5rem;">Kesadaran Keamanan: Perlu Ditingkatkan</div>
+  </div>
+
+  <!-- Tips -->
+  <div class="tips-card">
+    <h5><i class="bi bi-lightbulb-fill me-2" style="color:#fbbf24;"></i>5 Tips Melindungi Diri dari Phishing</h5>
+    <div class="tip-item">
+      <div class="tip-icon"><i class="bi bi-link text-info"></i></div>
+      <div class="tip-text">
+        <strong>Verifikasi URL di Address Bar</strong>
+        <span>Pastikan domain tepat (mis: tas-corp.id, bukan tas-c0rp.id). Gunakan HTTPS dan cek ikon gembok.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon"><i class="bi bi-telephone text-success"></i></div>
+      <div class="tip-text">
+        <strong>Verifikasi Telepon Jika Ragu</strong>
+        <span>Hubungi IT Helpdesk di nomor resmi (Ext. 1337) sebelum mengisi form apapun yang meminta password.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon"><i class="bi bi-clock-history text-warning"></i></div>
+      <div class="tip-text">
+        <strong>Jangan Panik oleh Tenggat Waktu</strong>
+        <span>Pesan dengan urgensi ekstrem ("hapus dalam 1 jam!") adalah taktik manipulasi. Tenangkan diri dulu.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon"><i class="bi bi-shield-lock text-info"></i></div>
+      <div class="tip-text">
+        <strong>Aktifkan Multi-Factor Authentication (MFA)</strong>
+        <span>Walaupun password bocor, MFA mencegah akses tidak sah ke akun Anda.</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-icon"><i class="bi bi-megaphone" style="color:#fbbf24;"></i></div>
+      <div class="tip-text">
+        <strong>Laporkan Segera</strong>
+        <span>Jika menemukan email/halaman mencurigakan, segera laporkan ke security@tas-corp.id jangan diteruskan ke orang lain.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <a href="/login" class="btn btn-safe">
+      <i class="bi bi-box-arrow-in-right me-2"></i>Kembali ke Portal Resmi
+    </a>
+    <a href="/it-update" class="btn btn-outline-safe">
+      <i class="bi bi-eye me-2"></i>Lihat Halaman Phishing Lagi
+    </a>
+  </div>
+
+  <!-- Closing note -->
+  <div class="alert alert-info text-center" style="border-radius:12px; font-size:.85rem;">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    <strong>Modul ini adalah bagian dari program</strong>
+    <em>Security Awareness Training</em> wajib tahunan PT Teknologi Aman Sejahtera.
+    Hasil simulasi ini akan dicatat untuk keperluan internal Security Audit (tanpa menyimpan password).
+  </div>
+
+</div><!-- /main-wrap -->
+
+<!-- Footer -->
+<div class="awareness-footer">
+  <strong>PT Teknologi Aman Sejahtera</strong> &nbsp;|&nbsp;
+  Security Awareness Program &nbsp;|&nbsp;
+  <i class="bi bi-envelope me-1"></i>security@tas-corp.id &nbsp;|&nbsp;
+  &copy; 2024 Semua hak dilindungi
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Animate score ring on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const ring = document.querySelector('.score-ring');
+    ring.style.transition = 'opacity .5s';
+    ring.style.opacity = '0';
+    setTimeout(() => { ring.style.opacity = '1'; }, 300);
+  });
+</script>
+</body>
+</html>
+

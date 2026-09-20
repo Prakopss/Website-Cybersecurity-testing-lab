@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Keuangan – PT Teknologi Aman Sejahtera</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <style>
+    :root { --primary:#0d3b6e; --accent:#1a73e8; --gold:#c9a84c; --sidebar-w:260px; }
+    * { font-family:'Inter',sans-serif; }
+    body { background:#f1f5f9; min-height:100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed; top:0; left:0;
+      width: var(--sidebar-w); height:100vh;
+      background: linear-gradient(180deg,#0d3b6e 0%,#0a2342 100%);
+      z-index: 1000; overflow-y: auto;
+      display: flex; flex-direction:column;
+    }
+    .sidebar-brand {
+      padding: 1.5rem 1.25rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    .sidebar-brand .brand-icon {
+      width:42px; height:42px;
+      background:rgba(255,255,255,.1);
+      border:1.5px solid var(--gold);
+      border-radius:10px;
+      display:inline-flex; align-items:center; justify-content:center;
+    }
+    .sidebar-brand h6 { color:#fff; font-weight:700; font-size:.85rem; margin-bottom:0; }
+    .sidebar-brand small { color:rgba(255,255,255,.5); font-size:.7rem; }
+
+    .sidebar-section { padding: .75rem 1.25rem .25rem; }
+    .sidebar-section span { color:rgba(255,255,255,.35); font-size:.68rem; font-weight:600; text-transform:uppercase; letter-spacing:.8px; }
+
+    .nav-item-side a {
+      display:flex; align-items:center; gap:.75rem;
+      padding: .6rem 1.25rem; color:rgba(255,255,255,.7);
+      text-decoration:none; font-size:.875rem;
+      border-left: 3px solid transparent;
+      transition: all .2s;
+    }
+    .nav-item-side a:hover, .nav-item-side a.active {
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      border-left-color: var(--gold);
+    }
+    .nav-item-side a.active { font-weight:600; }
+    .nav-item-side .icon { width:20px; text-align:center; font-size:1rem; }
+
+    .sidebar-footer {
+      margin-top:auto;
+      padding:1rem 1.25rem;
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+    .user-card { display:flex; align-items:center; gap:.75rem; }
+    .user-avatar {
+      width:36px; height:36px;
+      background:var(--gold); color:#fff;
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; font-size:.85rem;
+    }
+    .user-info small { color:rgba(255,255,255,.5); font-size:.7rem; }
+    .user-info strong { color:#fff; font-size:.8rem; display:block; }
+
+    /* Main Content */
+    .main-content { margin-left:var(--sidebar-w); padding:2rem; min-height:100vh; }
+
+    .topbar {
+      background:#fff;
+      border-radius:12px;
+      padding:1rem 1.5rem;
+      display:flex; align-items:center; justify-content:space-between;
+      box-shadow:0 1px 4px rgba(0,0,0,.06);
+      margin-bottom:2rem;
+    }
+    .topbar h4 { color:#0d3b6e; font-weight:700; margin:0; font-size:1.15rem; }
+    .topbar .breadcrumb { margin:0; font-size:.8rem; }
+
+    /* KPI Cards */
+    .kpi-card {
+      background:#fff;
+      border-radius:12px;
+      padding:1.5rem;
+      box-shadow:0 1px 4px rgba(0,0,0,.06);
+      border-left:4px solid transparent;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .kpi-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+    .kpi-card.blue  { border-left-color:#1a73e8; }
+    .kpi-card.green { border-left-color:#16a34a; }
+    .kpi-card.gold  { border-left-color:#c9a84c; }
+    .kpi-card.red   { border-left-color:#dc2626; }
+
+    .kpi-label { font-size:.78rem; color:#6b7280; font-weight:500; text-transform:uppercase; letter-spacing:.5px; margin-bottom:.5rem; }
+    .kpi-value { font-size:1.55rem; font-weight:700; color:#111827; line-height:1.2; }
+    .kpi-sub   { font-size:.78rem; margin-top:.35rem; }
+
+    /* Chart card */
+    .chart-card {
+      background:#fff;
+      border-radius:12px;
+      padding:1.5rem;
+      box-shadow:0 1px 4px rgba(0,0,0,.06);
+    }
+    .chart-card h6 { color:#374151; font-weight:600; font-size:.9rem; margin-bottom:1rem; }
+
+    /* Transaction table */
+    .table-card { background:#fff; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; }
+    .table-card .table-header { padding:1.25rem 1.5rem; border-bottom:1px solid #f3f4f6; }
+    .table-card .table-header h6 { margin:0; font-weight:600; color:#374151; font-size:.9rem; }
+    .table thead th { background:#f9fafb; color:#6b7280; font-size:.78rem; font-weight:600; text-transform:uppercase; letter-spacing:.5px; border:none; padding:.75rem 1rem; }
+    .table tbody td { font-size:.85rem; color:#374151; padding:.85rem 1rem; vertical-align:middle; border-color:#f3f4f6; }
+    .badge-status { border-radius:6px; padding:3px 10px; font-size:.72rem; font-weight:600; }
+
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-brand d-flex align-items-center gap-2">
+    <div class="brand-icon"><i class="bi bi-shield-lock-fill text-white"></i></div>
+    <div>
+      <h6>TAS Finance</h6>
+      <small>Portal Keuangan Korporat</small>
+    </div>
+  </div>
+
+  <div class="sidebar-section mt-2"><span>Utama</span></div>
+  <div class="nav-item-side">
+    <a href="/dashboard/keuangan" class="active">
+      <span class="icon"><i class="bi bi-speedometer2"></i></span> Dashboard
+    </a>
+  </div>
+  <div class="nav-item-side">
+    <a href="/dashboard/laporan">
+      <span class="icon"><i class="bi bi-file-earmark-bar-graph"></i></span> Laporan Keuangan
+    </a>
+  </div>
+  <div class="nav-item-side">
+    <a href="/dashboard/transfer_dana">
+      <span class="icon"><i class="bi bi-arrow-left-right"></i></span> Transfer Dana
+    </a>
+  </div>
+
+  <div class="sidebar-section mt-2"><span>Manajemen</span></div>
+  <div class="nav-item-side">
+    <a href="#">
+      <span class="icon"><i class="bi bi-people-fill"></i></span> Manajemen Pengguna
+    </a>
+  </div>
+  <div class="nav-item-side">
+    <a href="#">
+      <span class="icon"><i class="bi bi-gear-fill"></i></span> Pengaturan
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">BF</div>
+      <div class="user-info">
+        <strong>Budi Finance</strong>
+        <small>CFO Division</small>
+      </div>
+      <a href="/logout" class="ms-auto text-white opacity-50" title="Logout">
+        <i class="bi bi-box-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div>
+      <h4><i class="bi bi-speedometer2 me-2" style="color:var(--accent)"></i>Dashboard Keuangan</h4>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Portal</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <span class="badge bg-success-subtle text-success border border-success-subtle">
+        <i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i>Sistem Normal
+      </span>
+      <span class="text-muted" style="font-size:.82rem;" id="currentDateTime"></span>
+      <button class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-bell"></i>
+        <span class="badge bg-danger ms-1" style="font-size:.65rem;">3</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card blue">
+        <div class="kpi-label"><i class="bi bi-bank me-1"></i>Saldo Total</div>
+        <div class="kpi-value">Rp 47,8 M</div>
+        <div class="kpi-sub text-success"><i class="bi bi-arrow-up-short"></i>+12.4% vs bulan lalu</div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card green">
+        <div class="kpi-label"><i class="bi bi-arrow-down-circle me-1"></i>Pemasukan (Sept)</div>
+        <div class="kpi-value">Rp 8,3 M</div>
+        <div class="kpi-sub text-success"><i class="bi bi-arrow-up-short"></i>+7.1% vs target</div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card red">
+        <div class="kpi-label"><i class="bi bi-arrow-up-circle me-1"></i>Pengeluaran (Sept)</div>
+        <div class="kpi-value">Rp 3,1 M</div>
+        <div class="kpi-sub text-danger"><i class="bi bi-arrow-up-short"></i>+2.3% vs bulan lalu</div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card gold">
+        <div class="kpi-label"><i class="bi bi-graph-up-arrow me-1"></i>Profit Bersih (Sept)</div>
+        <div class="kpi-value">Rp 5,2 M</div>
+        <div class="kpi-sub text-success"><i class="bi bi-arrow-up-short"></i>+19.7% YoY</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-xl-8">
+      <div class="chart-card">
+        <h6><i class="bi bi-bar-chart-fill me-2" style="color:var(--accent)"></i>Arus Kas – 6 Bulan Terakhir</h6>
+        <canvas id="cashflowChart" height="90"></canvas>
+      </div>
+    </div>
+    <div class="col-xl-4">
+      <div class="chart-card h-100">
+        <h6><i class="bi bi-pie-chart-fill me-2" style="color:var(--gold)"></i>Alokasi Anggaran</h6>
+        <canvas id="budgetChart" height="170"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transactions + Lab Panel -->
+  <div class="row g-3 mb-4">
+    <div class="col-xl-7">
+      <div class="table-card">
+        <div class="table-header d-flex justify-content-between align-items-center">
+          <h6><i class="bi bi-clock-history me-2"></i>Transaksi Terakhir</h6>
+          <a href="/dashboard/laporan" class="btn btn-sm btn-outline-primary" style="font-size:.78rem;">Lihat Semua</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th>No. Ref</th><th>Tanggal</th><th>Keterangan</th><th>Jumlah</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for tx in transactions %}
+              <tr>
+                <td><code style="font-size:.78rem;">{{ tx.ref_number }}</code></td>
+                <td>{{ tx.tx_date }}</td>
+                <td>{{ tx.description }}</td>
+                <td class="{% if tx.debit != '—' %}text-danger{% else %}text-success{% endif %} fw-600">
+                  {% if tx.debit != '—' %}-{{ tx.debit }}{% else %}+{{ tx.credit }}{% endif %}
+                </td>
+                <td>
+                  {% if tx.status == 'Sukses' %}
+                  <span class="badge-status bg-success-subtle text-success">Sukses</span>
+                  {% elif tx.status == 'Pending' %}
+                  <span class="badge-status bg-warning-subtle text-warning">Pending</span>
+                  {% else %}
+                  <span class="badge-status bg-danger-subtle text-danger">Gagal</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="5" class="text-center py-3 text-muted">Belum ada transaksi.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAPAN MEMO & PENGUMUMAN INTERNAL (LAB STORED XSS) -->
+    <div class="col-xl-5">
+      <div class="chart-card h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="mb-0"><i class="bi bi-chat-left-text-fill me-2" style="color:var(--accent)"></i>Memo & Catatan Internal</h6>
+          <button class="btn btn-xs btn-outline-primary py-1 px-2" style="font-size:.75rem;" type="button" data-bs-toggle="collapse" data-bs-target="#newMemoCollapse">
+            <i class="bi bi-plus-circle me-1"></i>Tulis Memo
+          </button>
+        </div>
+
+        <!-- Form Tambah Memo -->
+        <div class="collapse mb-3" id="newMemoCollapse">
+          <form action="/api/memo" method="POST" class="p-3 bg-light rounded-3 border">
+            <div class="mb-2">
+              <label class="form-label mb-1" style="font-size:.78rem;">Pengirim / Jabatan</label>
+              <input type="text" name="author" class="form-control form-control-sm" placeholder="Contoh: Budi Santoso (CFO)" required value="Budi Santoso (CFO)">
+            </div>
+            <div class="mb-2">
+              <label class="form-label mb-1" style="font-size:.78rem;">Isi Catatan / Memo</label>
+              <textarea name="content" class="form-control form-control-sm" rows="2" placeholder="Tuliskan catatan internal di sini..." required></textarea>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+              <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-3" data-bs-toggle="collapse" data-bs-target="#newMemoCollapse" style="font-size:.78rem;">Batal</button>
+              <button type="submit" class="btn btn-sm btn-primary py-1 px-3" style="font-size:.78rem;">Kirim Memo</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Daftar Memo -->
+        <div class="memo-list" style="max-height:380px; overflow-y:auto;">
+          {% for memo in memos %}
+          <div class="p-3 rounded-3 mb-2 border-start border-3 border-primary bg-white shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <strong style="font-size:.85rem; color:#1e293b;">{{ memo.author }}</strong>
+              <small class="text-muted" style="font-size:.72rem;"><i class="bi bi-clock me-1"></i>{{ memo.timestamp }}</small>
+            </div>
+            <!-- Render mentah untuk skenario Stored XSS -->
+            <div style="font-size:.82rem; color:#475569; word-break:break-word;">
+              {{ memo.content | safe }}
+            </div>
+          </div>
+          {% else %}
+          <p class="text-muted text-center py-4 mb-0" style="font-size:.82rem;">Tidak ada catatan internal.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // DateTime
+  function updateDateTime() {
+    const now = new Date();
+    document.getElementById('currentDateTime').textContent =
+      now.toLocaleString('id-ID', {weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+  updateDateTime(); setInterval(updateDateTime, 30000);
+
+  // Cashflow Chart
+  const cfCtx = document.getElementById('cashflowChart').getContext('2d');
+  new Chart(cfCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep'],
+      datasets: [
+        {
+          label: 'Pemasukan (Juta)',
+          data: [6200, 7100, 6800, 7500, 8100, 8300],
+          backgroundColor: 'rgba(26,115,232,.75)',
+          borderRadius: 6
+        },
+        {
+          label: 'Pengeluaran (Juta)',
+          data: [2800, 3100, 2900, 3300, 2950, 3100],
+          backgroundColor: 'rgba(220,38,38,.65)',
+          borderRadius: 6
+        }
+      ]
+    },
+    options: {
+      responsive:true,
+      plugins: { legend: { labels: { font: { family:'Inter', size:12 } } } },
+      scales: {
+        x: { grid: { display:false } },
+        y: { grid: { color:'#f3f4f6' }, ticks: { callback: v => 'Rp '+v/1000+'M' } }
+      }
+    }
+  });
+
+  // Budget Doughnut
+  const bgCtx = document.getElementById('budgetChart').getContext('2d');
+  new Chart(bgCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Operasional', 'SDM', 'Teknologi', 'Pemasaran', 'R&D'],
+      datasets: [{
+        data: [35, 28, 18, 12, 7],
+        backgroundColor: ['#1a73e8','#16a34a','#c9a84c','#dc2626','#7c3aed'],
+        borderWidth: 0, hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive:true, cutout:'65%',
+      plugins: {
+        legend: { position:'bottom', labels: { font: { family:'Inter', size:11 }, padding:12 } }
+      }
+    }
+  });
+</script>
+</body>
+</html>
+

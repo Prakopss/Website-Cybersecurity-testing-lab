@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – PT Teknologi Aman Sejahtera</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0d3b6e;
+      --accent:  #1a73e8;
+      --gold:    #c9a84c;
+    }
+    * { font-family: 'Inter', sans-serif; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0d3b6e 0%, #1a5276 50%, #0a2342 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .login-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 25px 60px rgba(0,0,0,.35);
+      overflow: hidden;
+      max-width: 440px;
+      width: 100%;
+    }
+
+    .login-header {
+      background: linear-gradient(135deg, #0d3b6e, #1a5276);
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+      border-bottom: 4px solid var(--gold);
+    }
+    .login-header .logo-circle {
+      width: 72px; height: 72px;
+      background: rgba(255,255,255,.12);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .login-header h5 { color: #fff; font-weight: 700; margin-bottom: .25rem; font-size: 1.15rem; }
+    .login-header small { color: rgba(255,255,255,.65); font-size: .8rem; letter-spacing: .5px; text-transform: uppercase; }
+
+    .login-body { padding: 2.5rem 2rem; }
+
+    .form-label { font-size: .875rem; font-weight: 600; color: #374151; }
+    .form-control {
+      border-radius: 8px;
+      border: 1.5px solid #d1d5db;
+      padding: .65rem 1rem;
+      font-size: .9rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(26,115,232,.15);
+    }
+    .input-group-text {
+      border-radius: 8px 0 0 8px;
+      background: #f3f4f6;
+      border: 1.5px solid #d1d5db;
+      color: #6b7280;
+    }
+    .input-group .form-control { border-radius: 0 8px 8px 0; }
+
+    .btn-login {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      padding: .75rem;
+      width: 100%;
+      font-size: .95rem;
+      letter-spacing: .3px;
+      transition: opacity .2s, transform .1s;
+    }
+    .btn-login:hover { opacity: .9; transform: translateY(-1px); color: #fff; }
+    .btn-login:active { transform: translateY(0); }
+
+    .divider { text-align: center; position: relative; margin: 1.5rem 0; }
+    .divider::before {
+      content: '';
+      position: absolute; top: 50%; left: 0;
+      width: 100%; height: 1px;
+      background: #e5e7eb;
+    }
+    .divider span {
+      background: #fff;
+      padding: 0 .75rem;
+      position: relative;
+      color: #9ca3af;
+      font-size: .8rem;
+    }
+
+    .security-badge {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: .6rem 1rem;
+      font-size: .78rem;
+      color: #166534;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-top: 1.5rem;
+    }
+
+    .login-footer {
+      background: #f9fafb;
+      border-top: 1px solid #f3f4f6;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: .78rem;
+      color: #9ca3af;
+    }
+
+
+  </style>
+</head>
+<body>
+
+<div class="login-card">
+  <!-- Header -->
+  <div class="login-header">
+    <div class="logo-circle">
+      <i class="bi bi-shield-lock-fill text-white fs-3"></i>
+    </div>
+    <h5>PT Teknologi Aman Sejahtera</h5>
+    <small>Sistem Informasi Keuangan Korporat</small>
+  </div>
+
+  <!-- Body -->
+  <div class="login-body">
+    <p class="text-muted mb-4" style="font-size:.85rem;">
+      <i class="bi bi-info-circle me-1"></i>
+      Masuk menggunakan akun korporat Anda yang telah terdaftar.
+    </p>
+    {% if error %}
+    <div class="alert alert-danger d-flex align-items-center mb-3" style="font-size:.85rem; border-radius:8px;">
+      <i class="bi bi-exclamation-triangle-fill me-2 fs-6 flex-shrink-0"></i>
+      <div>{{ error }}</div>
+    </div>
+    {% endif %}
+
+    <form action="/api/login" method="POST" id="loginForm">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username / NIK</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+          <input type="text" class="form-control" id="username" name="username"
+                 placeholder="contoh: budi.finance" required autocomplete="username" />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+          <input type="password" class="form-control" id="password" name="password"
+                 placeholder="Masukkan password Anda" required autocomplete="current-password" />
+          <button class="btn btn-outline-secondary" type="button" id="togglePwd"
+                  style="border-radius:0 8px 8px 0; border:1.5px solid #d1d5db;">
+            <i class="bi bi-eye" id="eyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="remember" name="remember" />
+          <label class="form-check-label" for="remember" style="font-size:.85rem;">Ingat saya</label>
+        </div>
+        <a href="#" class="text-decoration-none" style="font-size:.85rem; color: var(--accent);">Lupa password?</a>
+      </div>
+
+      <button type="submit" class="btn btn-login">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Masuk ke Sistem
+      </button>
+    </form>
+
+    <div class="divider"><span>Atau hubungi</span></div>
+    <p class="text-center mb-0" style="font-size:.82rem; color:#6b7280;">
+      <i class="bi bi-telephone-fill me-1"></i> IT Helpdesk: Ext. <strong>1337</strong> &nbsp;|&nbsp;
+      <i class="bi bi-envelope-fill me-1"></i> it@tas-corp.id
+    </p>
+
+    <div class="security-badge">
+      <i class="bi bi-shield-check-fill fs-5"></i>
+      <span>Koneksi Anda dienkripsi. Jangan bagikan password kepada siapapun.</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="login-footer">
+    &copy; 2024 PT Teknologi Aman Sejahtera &nbsp;|&nbsp; v3.2.1 &nbsp;|&nbsp;
+    <a href="#" class="text-decoration-none" style="color:#9ca3af;">Kebijakan Privasi</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Toggle password visibility
+  document.getElementById('togglePwd').addEventListener('click', function () {
+    const pwd = document.getElementById('password');
+    const icon = document.getElementById('eyeIcon');
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      icon.className = 'bi bi-eye-slash';
+    } else {
+      pwd.type = 'password';
+      icon.className = 'bi bi-eye';
+    }
+  });
+</script>
+</body>
+</html>
+
