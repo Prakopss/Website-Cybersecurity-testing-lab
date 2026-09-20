@@ -405,9 +405,9 @@ if __name__ == "__main__":
     print("  PT TEKNOLOGI AMAN SEJAHTERA – CYBERSECURITY PENETRATION TESTING LAB")
     print("  Status: Server Aktif & Siap Diakses")
     print("  Alamat Lokal: http://127.0.0.1:5000")
-    print("  Alamat Jaringan: http://0.0.0.0:5000 (Gunakan IP laptop ini dari Kali)")
-    print("  WSGI Engine: Waitress Multi-threaded (Kapasitas: 16 Threads)")
+    port = int(os.environ.get("PORT", 5000))
+    print(f"  Port: {port}")
     print("=" * 72)
 
     from waitress import serve
-    serve(app, host="0.0.0.0", port=5000, threads=16)
+    serve(app, host="0.0.0.0", port=port, threads=16)
